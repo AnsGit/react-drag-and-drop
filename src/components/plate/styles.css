@@ -4,11 +4,11 @@
   background-color: green;
 }
 
-.plate:hover {
+.plate:not(.dragging):hover {
   cursor: grab;
   background-color: rgb(78, 154, 78);
 }
 
-.plate.dragging:not(:hover) {
+.plate.dragging {
   cursor: grabbing;
 }

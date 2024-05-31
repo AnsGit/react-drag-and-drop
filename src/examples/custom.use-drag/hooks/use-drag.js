@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const body = document.querySelector('body');
 
 const useDrag = ({
-  parentRef,
+  containerRef,
   isDisabled = false,
   onStart = (e) => {},
   onMove = (e) => {},
   onEnd = (e) => {},
 }) => {
   const [isDragging, setIsDragging] = useState(false);
+  const ref = useRef(null);
   // const [position, setPosition] = useState({});
 
   if (isDisabled) return { isDragging, props: {} };
@@ -18,6 +19,7 @@ const useDrag = ({
 
   if (!isDragging) {
     const onStartEventListener = (e) => {
+      ref.current = e.target;
       setIsDragging(true);
       console.log('START', e);
       onStart(e);
@@ -51,6 +53,7 @@ const useDrag = ({
       body.removeEventListener('touchmove', onMoveEventListener);
       body.removeEventListener('mousemove', onMoveEventListener);
 
+      ref.current = null;
       setIsDragging(false);
       console.log('END', e);
       onEnd(e);
