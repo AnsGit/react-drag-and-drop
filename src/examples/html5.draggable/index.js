@@ -1,3 +1,4 @@
+import '../../common/styles.css';
 import './styles.css';
 
 export default function Draggable() {
