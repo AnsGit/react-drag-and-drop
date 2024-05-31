@@ -1,13 +1,13 @@
 import { useRef } from 'react';
-import CustomPlate from './components/custom-plate';
+import Plate from './components/plate';
 import './styles.css';
 
 const CustomUseDrag = () => {
-  const ref = useRef(null);
+  const containerRef = useRef(null);
 
   return (
-    <div className='drag-container' ref={ref}>
-      <CustomPlate containerRef={ref} />
+    <div className='drag-container' ref={containerRef}>
+      <Plate containerRef={containerRef} />
     </div>
   );
 };

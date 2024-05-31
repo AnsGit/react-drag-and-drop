@@ -1,13 +1,13 @@
 import { useDrag } from '../../hooks';
-import Plate from '../../../../components/plate';
+import BasicPlate from '../../../../components/basic-plate';
 import './styles.css';
 
-const CustomPlate = (props = {}) => {
+const Plate = (props = {}) => {
   const { containerRef, isDraggable = false, ...restProps } = props;
   const subscription = useDrag({ containerRef, isDisabled: isDraggable });
 
   return (
-    <Plate
+    <BasicPlate
       isDragging={subscription.isDragging}
       {...subscription.props}
       {...restProps}
@@ -15,4 +15,4 @@ const CustomPlate = (props = {}) => {
   );
 };
 
-export default CustomPlate;
+export default Plate;

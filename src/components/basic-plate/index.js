@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import './styles.css';
 
-const Plate = ({ children, isDragging = false, ...props }) => {
+const BasicPlate = ({ children, isDragging = false, ...props }) => {
   return (
     <div className={cn('plate', { dragging: isDragging })} {...props}>
       {children}
@@ -9,4 +9,4 @@ const Plate = ({ children, isDragging = false, ...props }) => {
   );
 };
 
-export default Plate;
+export default BasicPlate;
