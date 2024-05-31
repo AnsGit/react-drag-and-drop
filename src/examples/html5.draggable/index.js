@@ -1,10 +1,9 @@
-import '../../common/styles.css';
+import Plate from '../../components/plate';
 import './styles.css';
 
-export default function Draggable() {
+const HTML5Draggable = () => {
   return (
-    <div
-      className='plate'
+    <Plate
       draggable
       onDragStart={(e, element) => {
         console.log('onDragStart', e, element);
@@ -31,4 +30,6 @@ export default function Draggable() {
       }}
     />
   );
-}
+};
+
+export default HTML5Draggable;
