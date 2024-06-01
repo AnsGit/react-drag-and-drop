@@ -2,8 +2,10 @@ import cn from 'classnames';
 import './styles.css';
 
 const BasicPlate = ({ children, isDragging = false, ...props }) => {
+  const className = cn('plate', { dragging: isDragging });
+
   return (
-    <div className={cn('plate', { dragging: isDragging })} {...props}>
+    <div className={className} {...props}>
       {children}
     </div>
   );

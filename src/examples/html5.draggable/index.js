@@ -28,7 +28,9 @@ const HTML5Draggable = () => {
       onDrop={(e, element) => {
         console.log('onDrop', e, element);
       }}
-    />
+    >
+      Plate
+    </BasicPlate>
   );
 };
 

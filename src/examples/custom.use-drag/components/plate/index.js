@@ -3,8 +3,22 @@ import BasicPlate from '../../../../components/basic-plate';
 import './styles.css';
 
 const Plate = (props = {}) => {
-  const { containerRef, isDraggable = false, ...restProps } = props;
-  const subscription = useDrag({ containerRef, isDisabled: isDraggable });
+  const {
+    // Is plate draggable
+    isDraggable = true,
+    // Drag callbacks
+    onDragStart = () => {},
+    onDragMove = () => {},
+    onDragEnd = () => {},
+    ...restProps
+  } = props;
+
+  const subscription = useDrag({
+    isDisabled: !isDraggable,
+    onStart: onDragStart,
+    onMove: onDragMove,
+    onEnd: onDragEnd,
+  });
 
   return (
     <BasicPlate

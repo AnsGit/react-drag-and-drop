@@ -1,7 +1,18 @@
 .plate {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
   width: 100px;
   height: 50px;
   background-color: green;
+  user-select: none;
+  touch-action: none;
+}
+
+.plate.rel {
+  position: relative;
 }
 
 .plate:not(.dragging):hover {
@@ -11,4 +22,5 @@
 
 .plate.dragging {
   cursor: grabbing;
+  z-index: 1;
 }
