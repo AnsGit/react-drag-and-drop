@@ -32,14 +32,14 @@ const useDrag = ({
     const { style } = targetRef.current.element;
 
     if (transform) {
-      style.left = 0;
-      style.top = 0;
+      style.left = '0px';
+      style.top = '0px';
       style.transform = `translate(${pos.left}px, ${pos.top}px)`;
       return;
     }
 
-    style.left = pos.left;
-    style.top = pos.top;
+    style.left = `${pos.left}px`;
+    style.top = `${pos.top}px`;
     style.transform = '';
   };
 

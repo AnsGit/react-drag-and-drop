@@ -15,9 +15,11 @@
   position: relative;
 }
 
-.plate:not(.dragging):hover {
-  cursor: grab;
-  background-color: rgb(78, 154, 78);
+@media (hover: hover) and (pointer: fine) {
+  .plate:not(.dragging):hover {
+    cursor: grab;
+    background-color: rgb(78, 154, 78);
+  }
 }
 
 .plate.dragging {

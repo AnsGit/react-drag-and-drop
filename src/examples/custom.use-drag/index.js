@@ -4,7 +4,6 @@ import './styles.css';
 
 const reducer = (state, action) => {
   const { type, payload } = action;
-  const { index = -1, value = null } = payload;
 
   switch (type) {
     case 'disable': {
@@ -14,12 +13,14 @@ const reducer = (state, action) => {
       return { ...state, isDisabled: false };
     }
     case 'move': {
+      const { index, pos: newPos } = payload;
+
       const newState = {
         ...state,
         positions: state.positions.map((pos) => ({ ...pos })),
       };
 
-      newState.positions[index] = { ...value };
+      newState.positions[index] = { ...newPos };
 
       return newState;
     }
@@ -66,7 +67,7 @@ const CustomUseDrag = () => {
 
             dispatch({
               type: 'move',
-              payload: { index: i, value: pos },
+              payload: { index: i, pos },
             });
           },
           style: pos,
