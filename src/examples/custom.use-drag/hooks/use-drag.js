@@ -15,6 +15,7 @@ const useDrag = ({
   onEnd = (e) => {},
 }) => {
   const [isDragging, setIsDragging] = useState(false);
+
   const targetRef = useRef(null);
   const parentRef = useRef(null);
 
@@ -32,8 +33,8 @@ const useDrag = ({
     const { style } = targetRef.current.element;
 
     if (transform) {
-      style.left = '0px';
-      style.top = '0px';
+      style.left = 0;
+      style.top = 0;
       style.transform = `translate(${pos.left}px, ${pos.top}px)`;
       return;
     }
@@ -47,6 +48,9 @@ const useDrag = ({
 
   if (!isDragging && !isDisabled) {
     const onStartEventHandler = (e) => {
+      // Disable multi-touch
+      if (e?.touches?.length > 1) return;
+
       const element = e.target;
 
       targetRef.current = {

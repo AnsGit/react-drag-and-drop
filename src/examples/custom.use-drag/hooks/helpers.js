@@ -48,23 +48,15 @@ const zoomEventPageXY = (e) => {
 };
 
 const eventPageXY = (e, isMobile = false) => {
-  let tempEvent = e;
+  let _e = e;
 
   if (isMobile) {
-    const touches = tempEvent?.touches?.length
-      ? tempEvent.touches
-      : tempEvent.changedTouches;
+    const touches = _e?.touches?.length ? _e.touches : _e.changedTouches;
 
-    if (touches?.length) {
-      tempEvent = touches[0];
-
-      // if (touches.length > 1) {
-      //   touches.length = 1
-      // }
-    }
+    if (touches?.length) _e = touches[0];
   }
 
-  return zoomEventPageXY(tempEvent);
+  return zoomEventPageXY(_e);
 };
 
 const eventTargetCursorXY = (e, isMobile) => {
