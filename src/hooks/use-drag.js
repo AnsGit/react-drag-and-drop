@@ -51,7 +51,7 @@ const useDrag = ({
       // Disable multi-touch
       if (e?.touches?.length > 1) return;
 
-      const element = e.target;
+      const element = e.currentTarget;
 
       targetRef.current = {
         element,
@@ -59,7 +59,7 @@ const useDrag = ({
         cursor: eventTargetCursorXY(e, isMobile),
       };
 
-      const parent = e.target.parentElement;
+      const parent = e.currentTarget.parentElement;
 
       parentRef.current = {
         element: parent,
@@ -97,9 +97,15 @@ const useDrag = ({
     targetRef.current = null;
     parentRef.current = null;
 
-    setIsDragging(false);
+    setTimeout(async () => {
+      setIsDragging(false);
 
-    onEnd(e, endPos);
+      const onEndAction = await onEnd(e, endPos);
+
+      if (typeof onEndAction === 'function') {
+        setTimeout(onEndAction);
+      }
+    });
   };
 
   useEffect(() => {

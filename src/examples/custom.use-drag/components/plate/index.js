@@ -13,6 +13,8 @@ const Plate = (props = {}) => {
     ...restProps
   } = props;
 
+  console.log(restProps.style);
+
   const subscription = useDrag({
     isDisabled: !isDraggable,
     onStart: onDragStart,

@@ -24,28 +24,74 @@ const reducer = (state, action) => {
 
       return newState;
     }
+    case 'return': {
+      const { index, pos: newPos } = payload;
+      const sIndex = state.result.indexOf(index);
+
+      const newState = {
+        ...state,
+        positions: state.positions.map((pos) => ({ ...pos })),
+        result: [...state.result],
+      };
+
+      newState.positions[index] = { ...newPos };
+
+      if (sIndex !== -1) newState.result[sIndex] = null;
+
+      return newState;
+    }
     default: {
       return state;
     }
   }
 };
 
-const initialState = {
-  isDisabled: false,
-  positions: [
-    {
+const plates = [
+  {
+    pos: {
       top: 100,
       left: 150,
     },
-    {
+  },
+  {
+    pos: {
       top: 100,
       left: 350,
     },
-    {
+  },
+  {
+    pos: {
       top: 100,
       left: 550,
     },
-  ],
+  },
+];
+
+const slots = [
+  {
+    pos: {
+      top: 300,
+      left: 150,
+    },
+  },
+  {
+    pos: {
+      top: 300,
+      left: 350,
+    },
+  },
+  {
+    pos: {
+      top: 300,
+      left: 550,
+    },
+  },
+];
+
+const initialState = {
+  isDisabled: false,
+  positions: plates.map(({ pos }) => ({ ...pos })),
+  result: slots.map((slot) => null),
 };
 
 const CustomUseDragSlots = () => {
@@ -53,7 +99,12 @@ const CustomUseDragSlots = () => {
 
   return (
     <div className='drag-container'>
-      {state.positions.map((pos, i) => {
+      {plates.map(({ pos: initialPos }, i) => {
+        // const sIndex = state.result.indexOf(i);
+
+        // const curPos = sIndex !== -1 ? slots[sIndex].pos : initialPos;
+        const curPos = state.positions[i];
+
         const plateProps = {
           isDraggable: !state.isDisabled,
           onDragStart: (e, pos) => {
@@ -65,12 +116,21 @@ const CustomUseDragSlots = () => {
           onDragEnd: (e, pos) => {
             // console.log('END', e, pos);
 
+            // Save current position
             dispatch({
               type: 'move',
               payload: { index: i, pos },
             });
+
+            return () => {
+              // Return plate to initial position
+              dispatch({
+                type: 'return',
+                payload: { index: i, pos: initialPos },
+              });
+            };
           },
-          style: pos,
+          style: curPos,
         };
 
         return <Plate key={`plate_${i}`} {...plateProps}>{`Plate ${i}`}</Plate>;

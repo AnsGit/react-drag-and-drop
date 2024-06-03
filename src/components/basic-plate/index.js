@@ -6,7 +6,7 @@ const BasicPlate = ({ children, isDragging = false, ...props }) => {
 
   return (
     <div className={className} {...props}>
-      {children}
+      <div className='inner'>{children}</div>
     </div>
   );
 };
