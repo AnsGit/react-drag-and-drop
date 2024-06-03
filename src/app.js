@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Menu from './menu';
 import { HTML5Draggable, CustomUseDrag } from './examples';
-import './styles.css';
+import './styles.scss';
 
 const App = () => {
   return (

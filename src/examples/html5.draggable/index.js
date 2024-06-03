@@ -1,5 +1,5 @@
 import BasicPlate from '../../components/basic-plate';
-import './styles.css';
+import './styles.scss';
 
 const HTML5Draggable = () => {
   return (

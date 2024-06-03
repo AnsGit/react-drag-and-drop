@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 import Plate from './components/plate';
-import './styles.css';
+import './styles.scss';
 
 const reducer = (state, action) => {
   const { type, payload } = action;

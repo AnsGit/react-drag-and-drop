@@ -1,6 +1,6 @@
 import { useDrag } from '../../../../hooks';
 import BasicPlate from '../../../../components/basic-plate';
-import './styles.css';
+import './styles.scss';
 
 const Plate = (props = {}) => {
   const {

@@ -17,4 +17,4 @@ npm start
 ## Drag Types:
 
 - HTML5 Draggable
-- Custom useDrag
+- Custom hook useDrag

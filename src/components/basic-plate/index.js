@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import './styles.css';
+import './styles.scss';
 
 const BasicPlate = ({ children, isDragging = false, ...props }) => {
   const className = cn('plate', { dragging: isDragging });

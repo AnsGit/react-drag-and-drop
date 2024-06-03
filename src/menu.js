@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import './styles.css';
+import './styles.scss';
 
 const Menu = () => {
   return (
