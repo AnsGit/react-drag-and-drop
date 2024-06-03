@@ -1,16 +1,28 @@
 import { Outlet } from 'react-router-dom';
+import cn from 'classnames';
 import './styles.scss';
+
+const items = [
+  { href: 'html5-draggable', title: 'HTML5: Draggable' },
+  { href: 'custom-use-drag-simple', title: 'Custom: useDrag: Simple' },
+  { href: 'custom-use-drag-slots', title: 'Custom: useDrag: Slots' },
+];
 
 const Menu = () => {
   return (
     <div className='menu'>
       <div className='links'>
-        <a className='link' href='./html5-draggable'>
-          HTML5 Draggable
-        </a>
-        <a className='link' href='./custom-use-drag'>
-          Custom useDrag
-        </a>
+        {items.map(({ href, title }) => {
+          const classname = cn('link', {
+            active: location.href.includes(href),
+          });
+
+          return (
+            <a key={href} className={classname} href={href}>
+              {title}
+            </a>
+          );
+        })}
       </div>
       <div className='scene'>
         <Outlet />

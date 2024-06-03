@@ -26,17 +26,23 @@ body {
     display: flex;
 
     .links {
-      width: 200px;
+      width: 230px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      text-align: left;
       flex: none;
       background-color: #c0e4eb;
-      padding: 20px 0 0 20px;
       box-sizing: border-box;
 
       .link {
-        margin-bottom: 10px;
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+
+        &.active {
+          background-color: #bba5ff;
+        }
       }
     }
   }
