@@ -7,6 +7,7 @@ const items = [
   { href: 'custom-use-drag-simple', title: 'Custom: useDrag: Simple' },
   { href: 'custom-use-drag-slots', title: 'Custom: useDrag: Slots' },
   { href: 'lib-react-draggable', title: 'Lib: react-draggable' },
+  { href: 'lib-react-draggable-core', title: 'Lib: react-draggable-core' },
 ];
 
 const Menu = () => {
@@ -15,7 +16,7 @@ const Menu = () => {
       <div className='links'>
         {items.map(({ href, title }) => {
           const classname = cn('link', {
-            active: location.href.includes(href),
+            active: location.href.match(new RegExp(`${href}$`)),
           });
 
           return (

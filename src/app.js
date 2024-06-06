@@ -5,6 +5,7 @@ import {
   CustomUseDragSimple,
   CustomUseDragSlots,
   LibReactDraggable,
+  LibReactDraggableCore,
 } from './examples';
 import './styles.scss';
 
@@ -27,6 +28,10 @@ const App = () => {
             <Route
               path='/lib-react-draggable'
               element={<LibReactDraggable />}
+            />
+            <Route
+              path='/lib-react-draggable-core'
+              element={<LibReactDraggableCore />}
             />
           </Route>
         </Routes>
