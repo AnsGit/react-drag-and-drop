@@ -6,6 +6,7 @@ const items = [
   { href: 'html5-draggable', title: 'HTML5: Draggable' },
   { href: 'custom-use-drag-simple', title: 'Custom: useDrag: Simple' },
   { href: 'custom-use-drag-slots', title: 'Custom: useDrag: Slots' },
+  { href: 'lib-react-draggable', title: 'Lib: react-draggable' },
 ];
 
 const Menu = () => {

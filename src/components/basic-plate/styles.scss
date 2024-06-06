@@ -3,7 +3,7 @@
   width: 100px;
   height: 50px;
   touch-action: none;
-  transition-property: left, top;
+  transition-property: left, top, transform;
   transition-duration: 0.3s;
 
   .inner {
@@ -14,7 +14,8 @@
     top: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
+    flex-direction: column;
     color: #fff;
     background-color: green;
     transition: background-color 0.3s;

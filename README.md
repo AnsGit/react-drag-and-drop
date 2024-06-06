@@ -18,3 +18,4 @@ npm start
 
 - HTML5 Draggable
 - Custom hook useDrag
+- Lib react-draggable

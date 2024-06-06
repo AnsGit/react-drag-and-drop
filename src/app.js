@@ -4,6 +4,7 @@ import {
   HTML5Draggable,
   CustomUseDragSimple,
   CustomUseDragSlots,
+  LibReactDraggable,
 } from './examples';
 import './styles.scss';
 
@@ -22,6 +23,10 @@ const App = () => {
             <Route
               path='/custom-use-drag-slots'
               element={<CustomUseDragSlots />}
+            />
+            <Route
+              path='/lib-react-draggable'
+              element={<LibReactDraggable />}
             />
           </Route>
         </Routes>
