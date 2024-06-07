@@ -1,30 +1,30 @@
 import { useState, useEffect, useRef } from 'react';
 import { DraggableCore } from 'react-draggable';
 import BasicPlate from '../../../../../components/basic-plate';
+import { getElementCursorOffset, getBounds, getExtendedData } from './helpers';
 import './styles.scss';
 
 const Plate = ({
   className = 'plate',
   children = null,
-  position = {},
+  position: inititalPosition = {},
   ...restProps
 }) => {
-  const { left, top } = position;
-
   const ref = useRef(null);
 
+  const drag = useRef({
+    bounds: null,
+    cursorOffset: null,
+  });
+
   const [isDragging, setIsDragging] = useState(false);
-  const [x, setX] = useState(left);
-  const [y, setY] = useState(top);
+  const [position, setPosition] = useState(inititalPosition);
 
-  useEffect(() => {
-    // setX(position.left);
-    // setY(position.top);
-    setX(left);
-    setY(top);
-  }, [position]);
+  useEffect(() => setPosition(inititalPosition), [inititalPosition]);
 
-  const transform = `translate(${x}px, ${y}px)`;
+  const getStyle = (x, y) => {
+    return { transform: `translate(${x}px, ${y}px)` };
+  };
 
   return (
     <DraggableCore
@@ -38,24 +38,57 @@ const Plate = ({
       onStart={(e, data) => {
         if (e?.touches?.length > 1) return false;
 
+        drag.current.bounds = getBounds(data);
+        drag.current.cursorOffset = getElementCursorOffset(data);
+
         setIsDragging(true);
 
-        restProps.onStart(e, data);
+        const extendedData = getExtendedData(
+          data,
+          drag.current.cursorOffset,
+          drag.current.bounds
+        );
+
+        restProps.onStart(e, extendedData);
       }}
       onDrag={(e, data) => {
-        // data.node.style.transform = `translate(${data.x}px, ${data.y}px)`;
-        restProps.onDrag(e, data);
+        const extendedData = getExtendedData(
+          data,
+          drag.current.cursorOffset,
+          drag.current.bounds
+        );
 
-        setX(data.x);
-        setY(data.y);
+        restProps.onDrag(e, extendedData);
+
+        const style = getStyle(extendedData.x, extendedData.y);
+
+        for (const key in style) {
+          data.node.style.setProperty(key, style[key]);
+        }
       }}
       onStop={(e, data) => {
+        const extendedData = getExtendedData(
+          data,
+          drag.current.cursorOffset,
+          drag.current.bounds
+        );
+
+        setPosition({ x: extendedData.x, y: extendedData.y });
         setIsDragging(false);
 
-        restProps.onStop(e, data);
+        drag.current = {
+          bounds: null,
+          cursorOffset: null,
+        };
+
+        restProps.onStop(e, extendedData);
       }}
     >
-      <BasicPlate ref={ref} style={{ transform }} isDragging={isDragging}>
+      <BasicPlate
+        ref={ref}
+        style={{ ...getStyle(position.x, position.y) }}
+        isDragging={isDragging}
+      >
         {children}
       </BasicPlate>
     </DraggableCore>

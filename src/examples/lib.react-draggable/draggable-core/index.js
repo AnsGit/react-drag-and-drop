@@ -1,5 +1,6 @@
-import { useReducer } from 'react';
+import { useReducer, useRef } from 'react';
 import Plate from './components/plate';
+import BasicSlot from '../../../components/basic-slot';
 import './styles.scss';
 
 const reducer = (state, action) => {
@@ -49,20 +50,20 @@ const reducer = (state, action) => {
 const plates = [
   {
     pos: {
-      top: 100,
-      left: 150,
+      x: 150,
+      y: 100,
     },
   },
   {
     pos: {
-      top: 100,
-      left: 350,
+      x: 350,
+      y: 100,
     },
   },
   {
     pos: {
-      top: 100,
-      left: 550,
+      x: 550,
+      y: 100,
     },
   },
 ];
@@ -70,20 +71,20 @@ const plates = [
 const slots = [
   {
     pos: {
-      top: 300,
-      left: 150,
+      x: 150,
+      y: 300,
     },
   },
   {
     pos: {
-      top: 300,
-      left: 350,
+      x: 350,
+      y: 300,
     },
   },
   {
     pos: {
-      top: 300,
-      left: 550,
+      x: 550,
+      y: 300,
     },
   },
 ];
@@ -97,11 +98,12 @@ const initialState = {
 const LibReactDraggable = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const slotsRefs = useRef(slots.map(() => ({ current: null })));
+
   return (
     <div className='drag-container'>
+      {/* Plates */}
       {plates.map(({ pos: initialPos }, i) => {
-        // const { left: initialX, top: initialY } = initialPos;
-
         const sIndex = state.result.indexOf(i);
 
         // const curPos = sIndex !== -1 ? slots[sIndex].pos : initialPos;
@@ -119,21 +121,10 @@ const LibReactDraggable = () => {
             console.log('MOUSE DOWN:', e);
           },
           onStart: (e, data) => {
-            // if (e?.targetTouches?.length > 1) return;
-            // if (e?.changedTouches?.length > 1) return;
-            // if (e.targetTouches && e.targetTouches[0])
             console.log('DRAG START:', data);
           },
           onDrag: (e, data) => {
             console.log('DRAG MOVE:', data);
-
-            // dispatch({
-            //   type: 'move',
-            //   payload: {
-            //     index: i,
-            //     pos: { left: data.x, top: data.y },
-            //   },
-            // });
           },
           onStop: (e, data) => {
             console.log('DRAG STOP:', data);
@@ -142,7 +133,7 @@ const LibReactDraggable = () => {
             //   type: 'move',
             //   payload: {
             //     index: i,
-            //     pos: { left: data.x, top: data.y },
+            //     pos: { x: data.x, y: data.y },
             //   },
             // });
 
@@ -161,6 +152,17 @@ const LibReactDraggable = () => {
             <div className='head'>{`Plate ${i}: head`}</div>
             <div className='body'>{`Plate ${i}: body`}</div>
           </Plate>
+        );
+      })}
+
+      {/* Slots */}
+      {slots.map(({ pos }, i) => {
+        return (
+          <BasicSlot
+            ref={slotsRefs.current[i]}
+            key={`slot_${i}`}
+            style={{ left: pos.x, top: pos.y }}
+          />
         );
       })}
     </div>
