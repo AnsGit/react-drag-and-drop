@@ -5,6 +5,7 @@
   touch-action: none;
   transition-property: left, top, transform;
   transition-duration: 0.3s;
+  z-index: 5;
 
   .inner {
     position: absolute;
@@ -38,6 +39,6 @@
   &.dragging {
     cursor: grabbing;
     transition: none;
-    z-index: 1;
+    z-index: 10;
   }
 }

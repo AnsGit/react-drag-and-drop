@@ -64,10 +64,51 @@ const getElementBoundedPosition = (position, bounds) => {
   return { x, y };
 };
 
+const isIntersects = (aBounds, bBounds) => {
+  if (aBounds.left > bBounds.right) return false;
+  if (aBounds.right < bBounds.left) return false;
+  if (aBounds.top > bBounds.bottom) return false;
+  if (aBounds.bottom < bBounds.top) return false;
+
+  return true;
+};
+
+const getDistanceBetweenCenters = (aBounds, bBounds) => {
+  const aCenterX = aBounds.x + aBounds.width / 2;
+  const aCenterY = aBounds.y + aBounds.height / 2;
+
+  const bCenterX = bBounds.x + bBounds.width / 2;
+  const bCenterY = bBounds.y + bBounds.height / 2;
+
+  return Math.sqrt((aCenterX - bCenterX) ** 2 + (aCenterY - bCenterY) ** 2);
+};
+
+const getIntersectionIndex = (bounds, targetBoundsList) => {
+  const targetBoundsListEntries = Object.entries(targetBoundsList);
+
+  const result = targetBoundsListEntries
+    .filter(([, targetBounds]) => {
+      return isIntersects(bounds, targetBounds);
+    })
+    .sort(([, aBounds], [, bBounds]) => {
+      const aDistance = getDistanceBetweenCenters(bounds, aBounds);
+      const bDistance = getDistanceBetweenCenters(bounds, bBounds);
+
+      return Math.sign(aDistance - bDistance);
+    });
+
+  if (!result.length) return -1;
+
+  return Number(result[0][0]);
+};
+
 export {
   getElementPosition,
   getBounds,
   getElementCursorOffset,
   getExtendedData,
   getElementBoundedPosition,
+  isIntersects,
+  getDistanceBetweenCenters,
+  getIntersectionIndex,
 };

@@ -1,6 +1,7 @@
-import { useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import Plate from './components/plate';
 import BasicSlot from '../../../components/basic-slot';
+import { getIntersectionIndex } from './components/plate/helpers';
 import './styles.scss';
 
 const reducer = (state, action) => {
@@ -13,6 +14,29 @@ const reducer = (state, action) => {
     case 'enable': {
       return { ...state, isDisabled: false };
     }
+    case 'hover-slot': {
+      const { index } = payload;
+
+      const newState = { ...state, slotIndex: index };
+
+      return newState;
+    }
+    case 'drag': {
+      const { value } = payload;
+
+      const newState = { ...state, isDragged: value };
+
+      return newState;
+    }
+    case 'set-slot-plate': {
+      const { sIndex, pIndex } = payload;
+
+      const newState = { ...state, result: [...state.result] };
+
+      newState.result[sIndex] = pIndex;
+
+      return newState;
+    }
     case 'move': {
       const { index, pos: newPos } = payload;
 
@@ -22,22 +46,6 @@ const reducer = (state, action) => {
       };
 
       newState.positions[index] = { ...newPos };
-
-      return newState;
-    }
-    case 'return': {
-      const { index, pos: newPos } = payload;
-      const sIndex = state.result.indexOf(index);
-
-      const newState = {
-        ...state,
-        positions: state.positions.map((pos) => ({ ...pos })),
-        result: [...state.result],
-      };
-
-      newState.positions[index] = { ...newPos };
-
-      if (sIndex !== -1) newState.result[sIndex] = null;
 
       return newState;
     }
@@ -93,12 +101,27 @@ const initialState = {
   isDisabled: false,
   positions: plates.map(({ pos }) => ({ ...pos })),
   result: slots.map((slot) => null),
+  isDragged: false,
+  slotIndex: -1,
 };
 
 const LibReactDraggable = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const slotsRefs = useRef(slots.map(() => ({ current: null })));
+  const slotsData = useRef({
+    refs: slots.map(() => ({ current: null })),
+    bounds: slots.map(() => null),
+  });
+
+  useEffect(() => {
+    const { refs, bounds } = slotsData.current;
+
+    refs.forEach((ref, i) => {
+      bounds[i] = ref.current.getBoundingClientRect();
+    });
+  }, []);
+
+  console.log('RENDER');
 
   return (
     <div className='drag-container'>
@@ -125,21 +148,94 @@ const LibReactDraggable = () => {
           },
           onDrag: (e, data) => {
             console.log('DRAG MOVE:', data);
+
+            const bounds = data.node.getBoundingClientRect();
+
+            const sIndex = getIntersectionIndex(
+              bounds,
+              slotsData.current.bounds
+            );
+
+            dispatch({
+              type: 'hover-slot',
+              payload: { index: sIndex },
+            });
+
+            dispatch({
+              type: 'drag',
+              payload: { value: true },
+            });
           },
           onStop: (e, data) => {
             console.log('DRAG STOP:', data);
 
-            // dispatch({
-            //   type: 'move',
-            //   payload: {
-            //     index: i,
-            //     pos: { x: data.x, y: data.y },
-            //   },
-            // });
+            if (!state.isDragged) return;
 
+            const plateSlotIndex = state.result.indexOf(i);
+
+            // Reset current plate slot
+            if (plateSlotIndex !== -1) {
+              dispatch({
+                type: 'set-slot-plate',
+                payload: {
+                  sIndex: plateSlotIndex,
+                  pIndex: null,
+                },
+              });
+            }
+
+            // If slot is hovered
+            if (state.slotIndex !== -1) {
+              // if slot is not filled with current plate
+              if (state.result[state.slotIndex] !== i) {
+                const slotPlateIndex = state.result[state.slotIndex];
+
+                if (slotPlateIndex !== null) {
+                  // Return slot's plate
+                  dispatch({
+                    type: 'move',
+                    payload: {
+                      index: slotPlateIndex,
+                      pos: plates[slotPlateIndex].pos,
+                    },
+                  });
+                }
+
+                // Save current plate to slot
+                dispatch({
+                  type: 'set-slot-plate',
+                  payload: {
+                    sIndex: state.slotIndex,
+                    pIndex: i,
+                  },
+                });
+              }
+
+              const slotPos = slots[state.slotIndex].pos;
+
+              // Move current plate to slot
+              dispatch({
+                type: 'move',
+                payload: { index: i, pos: slotPos },
+              });
+            } else {
+              // Return current slot
+              dispatch({
+                type: 'move',
+                payload: { index: i, pos: initialPos },
+              });
+            }
+
+            // Clear slot hover
             dispatch({
-              type: 'return',
-              payload: { index: i, pos: initialPos },
+              type: 'hover-slot',
+              payload: { index: -1 },
+            });
+
+            // Clear drag status
+            dispatch({
+              type: 'drag',
+              payload: { value: false },
             });
           },
           scale: 1,
@@ -159,8 +255,9 @@ const LibReactDraggable = () => {
       {slots.map(({ pos }, i) => {
         return (
           <BasicSlot
-            ref={slotsRefs.current[i]}
+            ref={slotsData.current.refs[i]}
             key={`slot_${i}`}
+            isHovered={i === state.slotIndex}
             style={{ left: pos.x, top: pos.y }}
           />
         );
