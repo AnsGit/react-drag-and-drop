@@ -115,14 +115,6 @@ const LibReactDraggable = () => {
     bounds: slots.map(() => null),
   });
 
-  useEffect(() => {
-    const { refs, bounds } = slotsData.current;
-
-    refs.forEach((ref, i) => {
-      bounds[i] = ref.current.getBoundingClientRect();
-    });
-  }, []);
-
   console.log('RENDER:', state.result);
 
   return (
@@ -144,6 +136,13 @@ const LibReactDraggable = () => {
           // offsetParent: document.body,
           onMouseDown: (e) => {
             console.log('MOUSE DOWN:', e);
+
+            // Save slots bounds
+            const { refs, bounds } = slotsData.current;
+
+            refs.forEach((ref, i) => {
+              bounds[i] = ref.current.getBoundingClientRect();
+            });
           },
           onStart: (e, data) => {
             console.log('DRAG START:', data);

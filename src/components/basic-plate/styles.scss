@@ -27,7 +27,7 @@
   }
 
   @media (hover: hover) and (pointer: fine) {
-    &:not(.dragging):hover {
+    &:not(.dragging, [data-is-dragging='true']):hover {
       cursor: grab;
 
       .inner {

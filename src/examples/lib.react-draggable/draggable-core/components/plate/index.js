@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { cloneElement, Children, useState, useEffect, useRef } from 'react';
 import { DraggableCore } from 'react-draggable';
 import BasicPlate from '../../../../../components/basic-plate';
 import {
@@ -90,13 +90,11 @@ const Plate = ({
         restProps.onStop(e, extendedData);
       }}
     >
-      <BasicPlate
-        ref={ref}
-        style={{ ...getStyle(position.x, position.y) }}
-        isDragging={isDragging}
-      >
-        {children}
-      </BasicPlate>
+      {cloneElement(Children.only(<BasicPlate>{children}</BasicPlate>), {
+        ref: ref,
+        style: { ...getStyle(position.x, position.y) },
+        'data-is-dragging': isDragging,
+      })}
     </DraggableCore>
   );
 
