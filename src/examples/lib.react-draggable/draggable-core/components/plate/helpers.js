@@ -1,21 +1,21 @@
-const getElementPosition = (data) => {
+const getElementPosition = (data, host) => {
   const parent = data.node.offsetParent;
 
   const { x: eX, y: eY } = data.node.getBoundingClientRect();
-  const { x: pX, y: pY } = parent.getBoundingClientRect();
+  const { x: hX, y: hY } = (host || parent).getBoundingClientRect();
 
-  return { x: eX - pX, y: eY - pY };
+  return { x: eX - hX, y: eY - hY };
 };
 
-const getBounds = (data) => {
+const getBounds = (data, host) => {
   return {
     element: data.node.getBoundingClientRect(),
-    parent: data.node.offsetParent.getBoundingClientRect(),
+    host: (host || data.node.offsetParent).getBoundingClientRect(),
   };
 };
 
-const getElementCursorOffset = (data) => {
-  const position = getElementPosition(data);
+const getElementCursorOffset = (data, host) => {
+  const position = getElementPosition(data, host);
 
   return { x: data.x - position.x, y: data.y - position.y };
 };
@@ -23,9 +23,11 @@ const getElementCursorOffset = (data) => {
 const getExtendedData = (data, cursorOffset, bounds = null) => {
   const extendedData = {
     ...data,
-    parent: data.node.offsetParent,
+    host: data.node.offsetParent,
     cursorX: data.x,
     cursorY: data.y,
+    innerCursorX: cursorOffset.x,
+    innerCursorY: cursorOffset.y,
     lastX: data.lastX - cursorOffset.x,
     lastY: data.lastY - cursorOffset.y,
     x: data.x - cursorOffset.x,
@@ -56,10 +58,10 @@ const getElementBoundedPosition = (position, bounds) => {
   let { x, y } = position;
 
   x = Math.max(0, x);
-  x = Math.min(x, bounds.parent.width - bounds.element.width);
+  x = Math.min(x, bounds.host.width - bounds.element.width);
 
   y = Math.max(0, y);
-  y = Math.min(y, bounds.parent.height - bounds.element.height);
+  y = Math.min(y, bounds.host.height - bounds.element.height);
 
   return { x, y };
 };
@@ -102,6 +104,22 @@ const getIntersectionIndex = (bounds, targetBoundsList) => {
   return Number(result[0][0]);
 };
 
+const getScale = () => {
+  const zoom = document.body.style.zoom;
+
+  if (/^\s*\d+(\.\d+)?\s*$/.test(zoom)) {
+    // is float
+    return parseFloat(zoom);
+  }
+
+  if (/^\s*\d+(\.\d+)?%\s*$/.test(zoom)) {
+    // is percentage
+    return parseInt(zoom) / 100;
+  }
+
+  return 1;
+};
+
 export {
   getElementPosition,
   getBounds,
@@ -111,4 +129,5 @@ export {
   isIntersects,
   getDistanceBetweenCenters,
   getIntersectionIndex,
+  getScale,
 };

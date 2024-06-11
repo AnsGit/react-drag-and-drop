@@ -1,13 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
 import { DraggableCore } from 'react-draggable';
 import BasicPlate from '../../../../../components/basic-plate';
-import { getElementCursorOffset, getBounds, getExtendedData } from './helpers';
+import {
+  getElementCursorOffset,
+  getBounds,
+  getExtendedData,
+  getScale,
+} from './helpers';
 import './styles.scss';
 
 const Plate = ({
   className = 'plate',
   children = null,
   position: inititalPosition = {},
+  scale = getScale(),
+  getStyle = (x, y) => {
+    return { transform: `translate(${x}px, ${y}px)` };
+  },
   ...restProps
 }) => {
   const ref = useRef(null);
@@ -22,13 +31,10 @@ const Plate = ({
 
   useEffect(() => setPosition(inititalPosition), [inititalPosition]);
 
-  const getStyle = (x, y) => {
-    return { transform: `translate(${x}px, ${y}px)` };
-  };
-
-  return (
+  const renderPlate = () => (
     <DraggableCore
       nodeRef={ref}
+      scale={scale}
       {...restProps}
       onMouseDown={(e) => {
         if (restProps.disabled) return;
@@ -93,6 +99,8 @@ const Plate = ({
       </BasicPlate>
     </DraggableCore>
   );
+
+  return renderPlate();
 };
 
 export default Plate;

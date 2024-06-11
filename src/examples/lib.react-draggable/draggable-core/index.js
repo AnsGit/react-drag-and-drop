@@ -108,6 +108,8 @@ const initialState = {
 const LibReactDraggable = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const dragContainerRef = useRef(null);
+
   const slotsData = useRef({
     refs: slots.map(() => ({ current: null })),
     bounds: slots.map(() => null),
@@ -121,10 +123,10 @@ const LibReactDraggable = () => {
     });
   }, []);
 
-  console.log('RENDER');
+  console.log('RENDER:', state.result);
 
   return (
-    <div className='drag-container'>
+    <div ref={dragContainerRef} className='drag-container'>
       {/* Plates */}
       {plates.map(({ pos: initialPos }, i) => {
         const sIndex = state.result.indexOf(i);
@@ -174,7 +176,7 @@ const LibReactDraggable = () => {
             const plateSlotIndex = state.result.indexOf(i);
 
             // Reset current plate slot
-            if (plateSlotIndex !== -1) {
+            if (![state.slotIndex, -1].includes(plateSlotIndex)) {
               dispatch({
                 type: 'set-slot-plate',
                 payload: {
@@ -238,7 +240,7 @@ const LibReactDraggable = () => {
               payload: { value: false },
             });
           },
-          scale: 1,
+          // scale: 1,
           position: curPos,
           // nodeRef: React.Ref<typeof React.Component>,
         };
