@@ -1,0 +1,5 @@
+*[data-is-dragging='true'] {
+  cursor: grabbing;
+  transition: none;
+  z-index: 10;
+}
